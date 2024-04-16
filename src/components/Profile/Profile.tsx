@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MainInfo } from '../MainInfo/MainInfo';
-import { Password } from '../Password/Password';
+import { PasswordTab } from '../PasswordTab/PasswordTab';
+import { auth } from '../../firebase/firebase';
+import { useAuth } from '../../firebase/authContext';
 
 enum Tab {
   MainInfo = "MainInfo",
@@ -19,11 +21,33 @@ const tabs: TabProps[] = [
 
 const tabComponents: Record<Tab, React.ReactNode> = {
   [Tab.MainInfo]: <MainInfo />,
-  [Tab.Password]: <Password />,
+  [Tab.Password]: <PasswordTab />,
 };
 
 export const Profile = () => {
+  const { currentUser  } = useAuth(); 
+
+  const [emailVerified, setEmailVerified] = useState(currentUser?.emailVerified);
   const [activeTab, setActiveTab] = useState<Tab>(Tab.MainInfo);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setEmailVerified(user?.emailVerified);
+    });
+
+    return unsubscribe; // Cleanup subscription on unmount
+  }, []);
+
+  if (!emailVerified) {
+    return (
+      <div className="py-20">
+        <div className="container">
+          <p>Please verify your email address to access all features.</p>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <section>

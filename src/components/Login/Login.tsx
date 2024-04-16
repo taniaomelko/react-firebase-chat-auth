@@ -1,9 +1,9 @@
 import React, { useState, FormEvent } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom'
 import { GoogleIcon } from '../icons';
+import { PasswordInput } from '../PasswordInput/PasswordInput';
 import { 
   signInWithEmailAndPassword, 
-  sendPasswordResetEmail,
   GoogleAuthProvider, 
   signInWithPopup,
 } from 'firebase/auth';
@@ -12,6 +12,9 @@ import { auth } from '../../firebase/firebase';
 export const Login:React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorEmail, setErrorEmail] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
+
   const navigate = useNavigate();
 
   const onLoginWithGoogle = async () => {
@@ -32,14 +35,16 @@ export const Login:React.FC = () => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         console.log(errorCode, errorMessage);
       });
-  };;
+  };
 
   const forgetPassword = () => {
-    navigate('/restore-password')
+    navigate('/restore-password');
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setErrorEmail('');
+    setErrorPassword('');
    
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -48,9 +53,20 @@ export const Login:React.FC = () => {
         console.log(user);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+        switch (error.code) {
+          case 'auth/user-not-found':
+            setErrorEmail('No account found with this email.');
+            break;
+          case 'auth/invalid-email':
+            setErrorEmail('Email address is invalid.');
+            break;
+          case 'auth/wrong-password':
+            setErrorPassword('Incorrect password.');
+            break;
+          default:
+            alert('An error occurred. Please try again.');
+            throw new Error('An error occurred. Please try again.');
+          }
       });
   };
 
@@ -76,21 +92,22 @@ export const Login:React.FC = () => {
                 placeholder="Email address"
                 onChange={(e) => setEmail(e.target.value)}
               />
+
+              {errorEmail && (
+                <div className="mt-4 text-12 leading-10 text-red">
+                  {errorEmail}
+                </div>
+              )}
             </div>
 
             <div className="mb-20">
-              <label htmlFor="password" className="block">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                autoComplete=""
-                placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <PasswordInput setPassword={setPassword} />
+
+              {errorPassword && (
+                <div className="mt-4 text-12 leading-10 text-red">
+                  {errorPassword}
+                </div>
+              )}
 
               <div 
                 className="link text-14 underline underline-offset-4"

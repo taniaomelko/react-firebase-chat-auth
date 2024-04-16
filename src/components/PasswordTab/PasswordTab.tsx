@@ -6,7 +6,7 @@ import {
 } from 'firebase/auth';
 import { useAuth } from '../../firebase/authContext';
 
-export const Password = () => {
+export const PasswordTab = () => {
   const { currentUser } = useAuth();
 
   const [currentPassword, setCurrentPassword] = useState('');
