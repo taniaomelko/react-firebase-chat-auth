@@ -1,10 +1,13 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { 
   reauthenticateWithCredential, 
   EmailAuthProvider, 
   updatePassword 
 } from 'firebase/auth';
 import { useAuth } from '../../firebase/authContext';
+import { PasswordInput } from '../PasswordInput/PasswordInput';
+import './PasswordTab.scss'
+import { LoaderIcon } from '../icons';
 
 export const PasswordTab = () => {
   const { currentUser } = useAuth();
@@ -13,9 +16,17 @@ export const PasswordTab = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+
+  useEffect(() => {
+    if (currentPassword && newPassword && confirmPassword) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [confirmPassword, currentPassword, newPassword]);
 
   const reauthenticateUser = async (currentPassword: string): Promise<void> => {
     if (!currentUser || !currentUser.email) {
@@ -23,29 +34,52 @@ export const PasswordTab = () => {
     }
   
     const credential = EmailAuthProvider.credential(currentUser.email, currentPassword);
-    try {
-      await reauthenticateWithCredential(currentUser, credential);
-    } catch (error) {
-      console.error("Error during re-authentication:", error);
-      throw error; // Re-throw the error to handle it in the component
-    }
-  };
-  
-  // Function to change the user's password
-  const changeUserPassword = async (newPassword: string): Promise<void> => {
-    if (!currentUser) {
-      throw new Error("No authenticated user found.");
-    }
-  
-    try {
-      await updatePassword(currentUser, newPassword);
-      console.log("Password updated successfully.");
-    } catch (error) {
-      console.error("Error updating password:", error);
-      throw error;
-    }
-  };
 
+    reauthenticateWithCredential(currentUser, credential)
+      .then(() => {
+        updatePassword(currentUser, newPassword)
+          .then(() => {
+            setSuccess("Password was successfully updated.");
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+          })
+          .catch((error) => {
+            switch (error.code) {
+              case 'auth/weak-password':
+                setError('The new password is too weak. Please choose a stronger password.');
+                break;
+              case 'auth/requires-recent-login':
+                setError('This operation is sensitive and requires recent authentication. Please log in again before retrying this request.');
+                break;
+              default:
+                setError('Failed to update password. Please try again.');
+            }
+          })
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case 'auth/wrong-password':
+            setError('The password is incorrect. Please try again.');
+            break;
+          case 'auth/user-mismatch':
+            setError('The provided user does not match the current user.');
+            break;
+          case 'auth/user-not-found':
+            setError('No user found with this email.');
+            break;
+          case 'auth/too-many-requests':
+            setError('Too many attempts. Please try again later.');
+            break;
+          default:
+            setError('Failed to reauthenticate. Please try again.');
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -59,65 +93,26 @@ export const PasswordTab = () => {
     };
 
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError("Your new password and confirmation password do not match. Please ensure both fields are identical and try again.");
       setLoading(false);
       return;
     }
 
-    try {
-      await reauthenticateUser(currentPassword);
-      await changeUserPassword(newPassword);
-      setSuccess("Password was successfully updated.");
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "An error occurred.");
-    } finally {
-      setLoading(false);
-    }
+    await reauthenticateUser(currentPassword);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-20">
-        <label htmlFor="currentPassword" className="text-14 font-bold">
-          Current Password
-        </label>
-        <input
-          id="currentPassword"
-          type="password"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          placeholder="Current Password"
-          required
-        />
+        <PasswordInput id="current-password" label="Current Password" setPassword={setCurrentPassword} />
       </div>
 
       <div className="mb-20">
-        <label htmlFor="new-password" className="text-14 font-bold">
-          New Password
-        </label>
-        <input
-          id="new-password"
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          placeholder="New Password"
-        />
+        <PasswordInput id="new-password" label="New Password" setPassword={setNewPassword} />
       </div>
 
       <div className="mb-20">
-        <label htmlFor="confirm-password" className="text-14 font-bold">
-          Confirm New Password
-        </label>
-        <input
-          id="confirm-password"
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirm New Password"
-        />
+        <PasswordInput id="confirm-password" label="Confirm New Password" setPassword={setConfirmPassword} />
       </div>
 
       {error && (
@@ -127,13 +122,19 @@ export const PasswordTab = () => {
         <div className="mb-20 text-12 leading-10 text-green">{success}</div>
       )}
 
-      <button 
-        type="submit" 
-        disabled={loading} 
-        className="button"
-        >
-        Update password
-      </button>
+      <div className="flex items-center gap-10">
+        <button 
+          type="submit" 
+          disabled={disabled} 
+          className="button"
+          >
+          Update Password
+        </button>
+
+          {loading && (
+            <LoaderIcon className="animate-spin text-cyan" />
+          )}
+      </div>
     </form>
   );
 };

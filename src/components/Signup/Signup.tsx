@@ -83,7 +83,7 @@ export const Signup: React.FC = () => {
                 </div>
 
                 <div className="mb-20">
-                  <PasswordInput setPassword={setPassword} />
+                  <PasswordInput id="password" label="Password" setPassword={setPassword} />
 
                   {errorPassword && (
                     <div className="mt-4 text-12 leading-10 text-red">

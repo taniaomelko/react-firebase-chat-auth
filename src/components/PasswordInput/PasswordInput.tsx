@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { EyeIcon, EyeCrossedIcon } from '../icons';
 
 interface ChildComponentProps {
+  id: string;
+  label?: string,
   setPassword: (value: string) => void;
 }
 
-export const PasswordInput:React.FC<ChildComponentProps> = ({ setPassword }) => {
+export const PasswordInput:React.FC<ChildComponentProps> = ({ id, label, setPassword }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -14,13 +16,15 @@ export const PasswordInput:React.FC<ChildComponentProps> = ({ setPassword }) => 
 
   return (
     <>
-      <label htmlFor="password" className="block">
-        Password
-      </label>
+      {label && (
+        <label htmlFor={id} className="block">
+          {label}
+        </label>
+      )}
       <div className="relative">
         <input
           className="!pr-30"
-          id="password"
+          id={id}
           name="password"
           type={showPassword ? "text" : "password"}
           required

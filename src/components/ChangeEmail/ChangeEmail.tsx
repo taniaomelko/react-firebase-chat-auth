@@ -9,7 +9,6 @@ import {
 
 import { useAuth } from '../../firebase/authContext';
 import { PasswordInput } from '../PasswordInput/PasswordInput';
-import './ChangeEmail.scss';
 
 export const ChangeEmail = () => {
   const { currentUser, currentUser: { email } } = useAuth();
@@ -78,8 +77,8 @@ export const ChangeEmail = () => {
                 For security, please enter your current password to confirm your identity before updating your email address.
               </div>
 
-              <div className="mb-20 password-input-wrap">
-                <PasswordInput setPassword={setPassword} />
+              <div className="mb-20">
+                <PasswordInput id="password" setPassword={setPassword} />
                 {errorPassword && (
                   <div className="mt-4 text-12 leading-10 text-red">
                     {errorPassword}

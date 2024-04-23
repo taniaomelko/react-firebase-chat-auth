@@ -61,4 +61,12 @@ const EyeCrossedIcon = ({ className }: { className?: string }) => {
   );
 }
 
-export { LogoIcon, ProfileIcon, LockIcon, LoaderIcon, GoogleIcon, EyeIcon, EyeCrossedIcon };
+const PencilIcon  = ({ className }: { className?: string }) => {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9.94919 2.69624L13.204 5.95097L4.96525 14.1897L1.71234 10.9349L9.94919 2.69624ZM15.6737 1.91128L14.2222 0.459778C13.6612 -0.101176 12.7504 -0.101176 12.1875 0.459778L10.7971 1.85017L14.0519 5.10493L15.6737 3.48311C16.1088 3.04801 16.1088 2.34635 15.6737 1.91128ZM0.00905723 15.5097C-0.0501752 15.7763 0.190506 16.0152 0.457112 15.9503L4.084 15.071L0.831082 11.8162L0.00905723 15.5097Z" fill="currentColor"/>
+    </svg>
+  );
+}
+
+export { LogoIcon, ProfileIcon, LockIcon, LoaderIcon, GoogleIcon, EyeIcon, EyeCrossedIcon, PencilIcon };
