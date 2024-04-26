@@ -2,13 +2,12 @@ import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../firebase/authContext';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { getAuth, updateProfile } from 'firebase/auth';
-import { storage } from '../../firebase/firebase';
+import { updateProfile } from 'firebase/auth';
+import { storage, auth } from '../../firebase/firebase';
 import { LockIcon, ProfileIcon } from '../icons';
 import { LoaderIcon, PencilIcon } from '../icons';
 
 export const MainInfo = () => {
-  const auth = getAuth();
   const user = auth.currentUser;
 
   const { 

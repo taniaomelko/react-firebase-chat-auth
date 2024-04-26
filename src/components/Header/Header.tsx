@@ -56,6 +56,11 @@ export const Header = () => {
     navigate('/profile');
   }
 
+  const goToChat = () => {
+    setProfileMenuVisible(false);
+    navigate('/chat');
+  }
+
   return (
     <header className="sticky top-0 left-0 right-0 py-[10px] shadow-small">
       <div className="container">
@@ -86,6 +91,7 @@ export const Header = () => {
                 <div className="absolute top-full right-0 p-20 w-[200px] bg-white rounded shadow-small">
                   <div className="grid gap-10">
                     <div className="link !w-full" onClick={goToProfile}>Profile</div>
+                    <div className="link !w-full" onClick={goToChat}>Chat</div>
                     <div className="link !w-full" onClick={logOut}>Log out</div>
                   </div>
                 </div>
