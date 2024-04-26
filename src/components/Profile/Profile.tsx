@@ -52,7 +52,7 @@ export const Profile = () => {
   return (
     <section>
       <div className="container">
-        <div className="grid tablet:grid-cols-3 gap-20 mx-auto max-w-[600px]">
+        <div className="grid tablet:grid-cols-3 gap-20 mx-auto max-w-600">
           <div className="tablet:col-span-1 py-20 px-10 bg-light-grey">
             {tabs.map((tab) => (
               <button

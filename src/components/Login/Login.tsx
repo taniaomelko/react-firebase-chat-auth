@@ -73,7 +73,7 @@ export const Login:React.FC = () => {
   return (
     <section className="py-40">
       <div className="container">
-        <div className="mx-auto max-w-[420px] p-20 shadow-small rounded">
+        <div className="mx-auto max-w-420 p-20 shadow-small rounded">
           <div className="mb-10">
             <h1 className="text-20 font-bold text-center">Log in</h1>
           </div>

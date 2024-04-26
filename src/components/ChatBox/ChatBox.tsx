@@ -47,7 +47,7 @@ export const ChatBox: React.FC = () => {
   return (
     <section>
       <div className="container">
-        <div className="mx-auto max-w-[600px] p-10 pb-100 overflow-auto h-[calc(100vh-_50px)] bg-light-grey">
+        <div className="mx-auto max-w-600 p-10 pb-100 overflow-auto h-[calc(100vh-_50px)] bg-light-grey">
           {messages?.map((message) => (
             <Message key={message.id} message={message} />
           ))}

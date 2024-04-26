@@ -25,7 +25,7 @@ export const RestorePassword = () => {
   return (
     <section className="py-40">
       <div className="container">
-        <div className="mx-auto max-w-[420px] p-20 shadow-small rounded">
+        <div className="mx-auto max-w-420 p-20 shadow-small rounded">
           <Link to="/log-in">
             ← Back 
           </Link>

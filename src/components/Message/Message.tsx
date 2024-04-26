@@ -23,7 +23,7 @@ export const Message: React.FC<MessageProps> = ({ message }) => {
 
   return (
     <div 
-      className={`mb-10 p-8 w-fit max-w-[calc(100%_-_50px)] flex gap-8 bg-white rounded-small shadow-small 
+      className={`max-w-[calc(100%_-_50px)] mb-10 p-8 w-fit flex gap-8 bg-white rounded-small shadow-small 
         ${message.uid === user?.uid ? "ml-auto" : ""}`
       }>
         {message.avatar ? (

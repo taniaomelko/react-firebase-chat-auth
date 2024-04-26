@@ -37,7 +37,7 @@ export const SendMessage: React.FC<SendMessageProps> = ({ scroll }) => {
   return (
     <form 
       onSubmit={sendMessage} 
-      className="fixed left-0 right-0 bottom-0 mx-auto max-w-[600px] flex p-20 bg-grey"
+      className="fixed left-0 right-0 bottom-0 mx-auto max-w-600 flex p-20 bg-grey"
     >
       <label htmlFor="messageInput" hidden>
         Enter Message
