@@ -6,7 +6,7 @@ interface SendMessageProps {
   scroll: MutableRefObject<HTMLSpanElement | null>;
 }
 
-const SendMessage: React.FC<SendMessageProps> = ({ scroll }) => {
+export const SendMessage: React.FC<SendMessageProps> = ({ scroll }) => {
   const [message, setMessage] = useState<string>('');
 
   const sendMessage = async (event: FormEvent<HTMLFormElement>) => {
@@ -26,12 +26,11 @@ const SendMessage: React.FC<SendMessageProps> = ({ scroll }) => {
       uid,
     })
     .then(() => {
-      console.log('Document successfully written!');
       setMessage('');
       scroll.current?.scrollIntoView({ behavior: 'smooth' });
     })
     .catch(error => {
-      console.error('Error writing document: ', error);
+      throw new Error('Error writing document: ', error);
     });
   };
 
@@ -55,5 +54,3 @@ const SendMessage: React.FC<SendMessageProps> = ({ scroll }) => {
     </form>
   );
 }
-
-export default SendMessage;

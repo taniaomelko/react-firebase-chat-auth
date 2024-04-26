@@ -10,11 +10,8 @@ interface MessageProps {
   message: IMessage;
 }
 
-const Message: React.FC<MessageProps> = ({ message }) => {  
+export const Message: React.FC<MessageProps> = ({ message }) => {  
   const [user] = useAuthState(auth) as [User | null, boolean, Error | undefined];
-
-  console.log(message);
-  
 
   const formatDate = (timestamp?: Timestamp) => {
     if (!timestamp) return '';
@@ -52,5 +49,3 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     </div>
   );
 };
-
-export default Message;

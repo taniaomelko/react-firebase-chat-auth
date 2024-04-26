@@ -9,8 +9,8 @@ import {
   DocumentData
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import Message from "../Message/Message";
-import SendMessage from "../SendMessage/SendMessage";
+import { Message } from "../Message/Message";
+import { SendMessage } from "../SendMessage/SendMessage";
 import { IMessage } from "../../types/IMessage";
 
 export const ChatBox: React.FC = () => {
